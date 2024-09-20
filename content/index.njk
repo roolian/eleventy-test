@@ -1,0 +1,74 @@
+---
+title: WordPress articles
+pagination:
+  data: posts
+  alias: pagedlist
+  size: 5
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ post.title }}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  body { font-size: 100%; font-family: sans-serif; }
+  ul, li {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+  }
+  li {
+    flex: 1 1 15em;
+  }
+  li.next {
+    text-align: right;
+  }
+  a {
+    text-decoration: none;
+  }
+  a h2 {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<h1>
+  {% if title %}{{ title }}{% else %}{{ list }} list{% endif %}
+  {% if pagination.pages.length > 1 %}, page {{ pagination.pageNumber + 1 }} of {{ pagination.pages.length }}{% endif %}
+</h1>
+
+<ul class="posts">
+  {%- for post in pagedlist -%}
+    <li>
+      <a href="/{{ post.slug }}/">
+        <h2>{{ post.title }}</h2>
+        <p><time datetime="{{ post.dateYMD }}">{{ post.dateFriendly }}</time></p>
+        <p>{{ post.excerpt | safe }}
+      </a>
+    </li>
+  {%- endfor -%}
+</ul>
+
+<hr>
+
+{% if pagination.href.previous or pagination.href.next %}
+<ul class="pages">
+  {% if pagination.href.previous %}
+    <li><a href="{{ pagination.href.previous }}">&laquo; newer posts</a></li>
+  {% endif %}
+
+  {% if pagination.href.next %}
+    <li class="next"><a href="{{ pagination.href.next }}">older posts &raquo;</a></li>
+  {% endif %}
+</ul>
+{% endif %}
+
+</body>
+</html>
